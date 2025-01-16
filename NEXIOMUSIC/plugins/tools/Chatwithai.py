@@ -1,19 +1,16 @@
 import requests
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction
-from NEXIOMUSIC import app  # Assuming this is the app instance from your project
-
+from NEXIOMUSIC import app
 @app.on_message(filters.command("ask"))
 async def fetch_med_info(client, message):
-    query = " ".join(message.command[1:])  # Extract the query after the command
+    query = " ".join(message.command[1:])
     if not query:
         await message.reply_text("Please provide a query to ask.")
         return
 
-    # Send typing action to indicate bot is working
     await client.send_chat_action(chat_id=message.chat.id, action=ChatAction.TYPING)
 
-    # Use the API to get medical data
     api_url = f"https://chatwithai.codesearch.workers.dev/?chat={query}"
     try:
         response = requests.get(api_url)
@@ -25,21 +22,18 @@ async def fetch_med_info(client, message):
     except Exception as e:
         reply = f"An error occurred: {e}"
 
-    # Add attribution and reply to the user
-    reply += "\n\nAnswer by Tanu Music"
     await message.reply_text(reply)
 
 @app.on_message(filters.mentioned & filters.group)
 async def fetch_med_info_group(client, message):
-    query = " ".join(message.command[1:])  # Extract the query after the command
+    # Use the text of the message directly instead of `message.command`
+    query = message.text.replace(f"@{client.me.username}", "").strip()  # Remove bot mention
     if not query:
         await message.reply_text("Please provide a medical query to ask.")
         return
 
-    # Send typing action to indicate bot is working
     await client.send_chat_action(chat_id=message.chat.id, action=ChatAction.TYPING)
 
-    # Use the API to get medical data
     api_url = f"https://chatwithai.codesearch.workers.dev/?chat={query}"
     try:
         response = requests.get(api_url)
@@ -51,6 +45,4 @@ async def fetch_med_info_group(client, message):
     except Exception as e:
         reply = f"An error occurred: {e}"
 
-    # Add attribution and reply to the user
-    reply += "\n\nAnswer by Tanu Music"
     await message.reply_text(reply)
