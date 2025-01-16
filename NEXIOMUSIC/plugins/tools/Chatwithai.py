@@ -1,7 +1,7 @@
 import requests
 from pyrogram import Client, filters
 from pyrogram.enums import ChatAction, ParseMode
-from AnonxMusic import app
+from NEXIOMUSIC import app
 
 @app.on_message(filters.command("ask"))
 async def fetch_med_info(client, message):
